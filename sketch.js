@@ -3,6 +3,9 @@ localStorage["highScore"] = 0;
 //making the sprite variables
 var trex, gameOver, cloud, obstacles, ground, invisibleGround, gameOver, restart;
 
+//sound var names
+var jumpSound, overSound, checkSound;
+
 //variables for loading images
  var trexRunning, trexCollided, groundImage, cloudsImg, obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, obstacle6, overImg, restartImg ;
 
@@ -30,6 +33,9 @@ function preload(){
   obstacle6 = loadImage("obstacle6.png");
   overImg = loadImage("gameOver.png");
   restartImg = loadImage("restart.png");
+  jumpSound = loadSound("jump.mp3");
+ overSound = loadSound("die.mp3")
+ checkSound = loadSound("checkPoint.mp3");
 }
 
 function setup() {
@@ -84,11 +90,15 @@ function draw() {
     ground.x = ground.width/2;
   }
   
-  ground.velocityX = -(5 + 3*count/100);  
+  ground.velocityX = -(5 + 3*count/100);
+   if(count%100 === 0 && count != 0){
+    checkSound.play();
+   }
   
   
   //making the trex jump
   if(trex.y > 338 && keyDown("space")){
+    jumpSound.play();
     trex.velocityY = -10;
   }
   
@@ -107,6 +117,7 @@ function draw() {
     
   if(trex.isTouching(ObstaclesGroup)){
     gameState  = 2;
+   overSound.play();
   }
 
   }
@@ -114,7 +125,7 @@ function draw() {
   else if(gameState === 2) {
     gameOver.visible = true;
     restart.visible = true;
-    
+   
     //set velcity of each game object to 0
     ground.velocityX = 0;
     trex.velocityY = 0;
